@@ -1,0 +1,116 @@
+★「/etc/inittab」
+init(最初に起動されるプロセス)の設定ファイル。
+defalutのランレベル、ランレベルに応じた動作等を設定。
+
+★init
+linux上のすべてのプログラムの実行元。
+
+★カーネル
+起動→HWを認識・制御→ルートとパーティションのマウント→initを起動
+
+★modprobe
+依存関係を考慮してカーネルモジュールをロードorアンロード。
+
+★lsmod
+ロードされているカーネルモジュールの情報を表示。
+ファイル上は「/proc/modules」。
+
+★dmesg
+起動時にカーネルが出力したメッセージを表示。
+
+★OS起動
+①BIOS→②ブートローダ→③カーネル→④init
+
+①BIOS（Basic I/O System）
+物理的なHW上に書き込まれている。
+記憶装置（HDD）等に関して最低限の認識を行う。
+MBR（ブートローダが格納されている記憶装置の先頭セクタ）を読み込み、得られたブートローダに制御を移す。
+
+②ブートローダ
+LinuxではGRUBが該当。
+記憶装置内のカーネルをロードし、カーネルに制御を移す。
+
+③カーネル
+上の通り。
+起動時にブートローダから渡されたパラメータは「/proc/cmdline」で確認可能。
+
+④init
+最初に起動されるプロセス。
+「SysVinit」（従来のinitプログラム）であれば「/sbin/init」が起動される。
+設定ファイル「/etc/inittab」の記述に基いて、アプリケーションレベルの初期化を行う。
+「Upstart」や「systemd」（初期化処理を高速化）であれば、「/etc/inittab」は存在しない。
+
+★Upstart
+処理を順次起動する「SysVinit」と異なり、処理を「ジョブ」として管理し、
+ジョブ実行に必要な前提条件（イベント）が成立した時点で実行される。
+サービス制御コマンドはinitctl。
+
+★systemd
+SysVinitを置き換える新しいinitの仕組み。扱う処理はUnitという単位で管理する。
+Upstartと同様、書くサービスを並列起動することができる。
+
+サービス制御コマンドはsystemctl。（systemctl サブコマンド [Unit]）
+サービスの再起動はrestart。
+すべてのUnit定義ファイルを一覧表示するのはlist-unit-files。
+
+起動時に最初に実行されるUnitは「/etc/systemd/system/default.target」。
+SysVinitとの対応は以下。
+↓
+SysVinit（ランレベル）：systemd（ターゲット）
+0    ：poweroff.target
+1    ：rescue.target
+2,3,4：multi-user.target
+5    ：graphical.target
+6    ：reboot.target
+→ターゲットは「/lib/systemd/system」配下に格納。
+
+★ランレベル
+Linuxの動作モードのこと。
+現在のランレベルを変更するコマンドは「init」「telinit」。
+
+★/proc
+プロセス、HWおよびシステムリソースなどの情報を扱うための擬似的なファイルシステム。
+ハードディスク上にファイルは存在せず、システムが起動する際にメモリ上に作成される。
+
+★D-Bus（Desktop Bus）
+プログラム同士が情報を伝達するプロセス間通信機構。
+
+★周辺機器（デバイス）
+①コールドプラグデバイス
+システムが停止している状態でのみデバイス差し替え可。
+例）ネットワークカード（NIC)
+
+②ホットプラグデバイス
+システムが起動している状態でもデバイスの差し替え可。
+例）USB
+
+ホットプラグデバイスの制御はudev（Userspace DEVice management）で。
+カーネルはデバイスを検知すると「/sys」以下の情報を更新
+→udevが更新を検知し、「/dev」以下にデバイスファイルを動的に作成。
+  （作成時の動作は、「etc/udev/rules.d」ディレクトリに配置された設定ファイルに従う）
+
+★PCI（Peripheral Components Interconnect）デバイス
+PCIバスに接続されたデバイス。
+ネットワークカード（NIC）やSCSIカード。
+
+情報を表示するコマンド：cat /proc/bus/pci/devices 、 lspci
+→ベンダー名、バスの速度、IRQ番号、I/Oポートアドレス
+
+★usb
+接続されたUSBデバイスの情報を表示するコマンド：cat /proc/bus/usb/devices 、lsusb
+
+★IRQ（Interrupt ReQuest）
+マウスやキーボードなどの周辺機器（デバイス）からCPUへの割り込み要求。
+
+★I/Oポートアドレス
+周辺機器（デバイス）とCPUがやり取りをする際に使用する16bitのアドレス。
+各デバイスへのアドレス割当は「/proc/ioports」ファイルで確認。
+
+★SCSI（Small Computer System Interface）（すかじー）
+ハードディスクやCD-ROMなどの周辺機器を接続するための規格の1つ。
+バス幅が8bitと16bitの2種類がある。
+
+★DMA
+CPUを介することなくメインメモリと周辺機器の間で直接的に情報転送を行う方式。
+DMAチャネル：周辺機器がDMAのコントローラに対して情報転送を要求するために使用する通信経路。
+→使用中のDMAのチャネルに関する情報「/proc/dma」
