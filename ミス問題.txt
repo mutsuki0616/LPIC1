@@ -1,0 +1,30 @@
+★システム再起動
+
+・reboot
+・init 6/telinit6
+・shutdown -r
+・systemctrl reboot/systemctrl start reboot.target(telinit 6と同じ）
+
+★dpkgツールの設定ファイル
+/etc/dpkg/dpkg.cfg
+
+★yum list
+パッケージの一覧表示（インストール済か）
+
+★udev
+ホットプラグデバイスを接続した際に、デバイスファイルを動的に作成。
+
+★systemdでサーバーとして稼働
+runlevel3.target/multi-user.target
+
+★apt-cache depends xxx
+指定したパッケージが依存しているパッケージの一覧表示
+
+★/proc
+プロセス、ハードウェアおよびシステムリソースなどの情報を扱うための疑似的なファイルシステム。
+
+★dpkg-reconfigure
+インストール済のパッケージをインストールしたときと同じように再設定する
+
+★D-Bus
+プログラム同士が情報を伝達するプロセス間通信機構
