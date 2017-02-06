@@ -12,3 +12,6 @@ allexport：新規作成・変更した変数を自動的に環境変数とする
 =  -eq
 >= -ge(greater than or equal)
 >  -gt(greater than)
+
+★exec
+指定したコマンドを既存のジョブ（シェルのプロセス）と置き換えて実行。
