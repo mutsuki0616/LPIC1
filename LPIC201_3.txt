@@ -1,0 +1,5 @@
+★タイムゾーン設定方法
+①「/usr/share/zoneinfo」⇒「/etc/localtime」（コピー or シンボリック）
+②「/etc/timezone」ファイルを設定
+③環境変数TZを設定（各ユーザの設定）
+④tzconfig
